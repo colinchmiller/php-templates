@@ -1,20 +1,20 @@
 <?php
   include("templates/header.htm");
 
-  if (!empty($_GET["action"])){
-    $action = $_GET["action"];
-    // sanatise the data to ensure that a user cannot change directories at will
-    // removes the filename from the directory in the URL
-    $action = basename($action);
-    //if the file doesn't exist, it will land the user on the home page
-    if (!file_exists("templates/$action.htm")){
-      $action = "index";
-    } elseif ($action == "header" || $action == "footer"){
-      $action = "index";
+  //set the default name
+  $action = 'index';
+  //specify some disallowed paths
+  $disallowed_paths = array('header', 'footer');
+  if (!empty($_GET['action'])){
+    $tmp_action = basename($_GET['action']);
+    //if it's not a disallowed path, and if the file exists,
+    //update $action
+    if(!in_array($tmp_action, $disallowed_paths) &&
+    file_exists("templates/{$tmp_action}.htm")){
+      $action = $tmp_action;
     }
-    include("templates/$action.htm");
-  } else {
-    include("templates/index.htm");
   }
+    //include $action
+  include("templates/$action.htm");
   include("templates/footer.htm");
  ?>
